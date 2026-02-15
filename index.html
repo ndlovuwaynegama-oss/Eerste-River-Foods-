@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Eerste River Foods | Order & Collect</title>
+
+  <style>
+    :root{
+      --bg:#070707;
+      --panel:#0f0f10;
+      --panel2:#141416;
+      --text:#f2f2f2;
+      --muted:#b9b9bf;
+      --orange:#ff8a00;
+      --red:#ff2d2d;
+      --line:rgba(255,255,255,.08);
+      --shadow: 0 18px 50px rgba(0,0,0,.55);
+      --radius: 18px;
+      --radius2: 14px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", sans-serif;
+      background: radial-gradient(1200px 600px at 20% 0%, rgba(255,138,0,.18), transparent 60%),
+                  radial-gradient(1000px 600px at 90% 10%, rgba(255,45,45,.12), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      overflow-x:hidden;
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    button{ font-family:inherit; }
+    .container{ max-width:1100px; margin:0 auto; padding:0 16px; }
+
+    /* Top Bar */
+    .topbar{
+      position: sticky; top:0; z-index: 50;
+      background: rgba(7,7,7,.72);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    .topbar-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 14px 0;
+      gap: 12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight:800; letter-spacing:.3px;
+    }
+    .brand-badge{
+      width:38px; height:38px; border-radius:12px;
+      display:grid; place-items:center;
+      background: linear-gradient(135deg, rgba(255,138,0,.95), rgba(255,45,45,.85));
+      box-shadow: 0 10px 30px rgba(255,138,0,.12);
+      font-weight:900;
+      user-select:none;
+    }
+    .brand small{ display:block; font-weight:600; color:var(--muted); margin-top:2px; }
+
+    .actions{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
+    .search{
+      width: 260px;
+      display:flex; align-items:center; gap:8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+    }
+    .search input{
+      width:100%;
+      border:none;
+      outline:none;
+      background:transparent;
+      color:var(--text);
+      font-size:14px;
+    }
+
+    .btn{
+      border:none;
+      cursor:pointer;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight:800;
+      transition: .2s ease;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .btn-primary{
+      background: linear-gradient(135deg, var(--orange), #ffb100);
+      color:#121212;
+      box-shadow: 0 12px 30px rgba(255,138,0,.16);
+    }
+    .btn-primary:hover{ transform: translateY(-1px); }
+    .btn-ghost{
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      border:1px solid var(--line);
+    }
+    .btn-ghost:hover{ background: rgba(255,255,255,.06); }
+
+    .cart-btn{
+      position: relative;
+      display:flex; align-items:center; gap:10px;
+    }
+    .cart-count{
+      position:absolute;
+      top:-6px; right:-6px;
+      width:20px; height:20px;
+      border-radius: 999px;
+      display:grid; place-items:center;
+      background: var(--red);
+      color:#fff;
+      font-size:12px;
+      font-weight:900;
+      border:2px solid #0b0b0c;
+    }
+
+    /* Sections */
+    section{ scroll-margin-top: 86px; }
+    .section{ padding: 18px 0 26px; }
+
+    /* Cards + grids */
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .card{
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border-radius: var(--radius);
+      overflow:hidden;
+      box-shadow: 0 14px 40px rgba(0,0,0,.38);
+      display:flex;
+      flex-direction: column;
+      min-height: 265px;
+    }
+    .card.slim{ min-height: unset; }
+    .card-body{
+      padding: 14px;
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .title{
+      margin:0;
+      font-size: 16px;
+      font-weight:950;
+      letter-spacing: .1px;
+    }
+    .desc{
+      margin:0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    /* Hero */
+    .hero{ padding: 28px 0 18px; }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.35fr .65fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+    .hero-card{
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border-radius: var(--radius);
+      overflow:hidden;
+      box-shadow: var(--shadow);
+      position: relative;
+      min-height: 280px;
+    }
+    .hero-media{
+      position:absolute; inset:0;
+      background:
+        linear-gradient(90deg, rgba(7,7,7,.86) 0%, rgba(7,7,7,.35) 55%, rgba(7,7,7,.92) 100%),
+        url('food-hero.jpg') center/cover no-repeat;
+      filter: saturate(1.05) contrast(1.05);
+    }
+    .hero-content{
+      position:relative;
+      padding: 26px;
+      max-width: 640px;
+    }
+    .tag{
+      display:inline-flex; gap:8px; align-items:center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      font-weight:900;
+      font-size:13px;
+    }
+    .hero h1{
+      margin: 14px 0 8px;
+      font-size: 44px;
+      line-height: 1.05;
+      letter-spacing: .2px;
+    }
+    .hero h1 span{ color: var(--orange); }
+    .hero p{
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    .hero-cta{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin-top: 12px;
+    }
+    .mini{
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+
+    .info-card{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      display:flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 280px;
+    }
+    .info-card h3{ margin: 0; font-size: 16px; }
+    .info-list{
+      display:grid; gap:10px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.35;
+    }
+    .info-item{
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.25);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .info-item b{ color:#fff; }
+    .notice{
+      border-left: 3px solid var(--orange);
+      padding-left: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    /* Menu Head */
+    .section-head{
+      display:flex; justify-content:space-between; align-items:flex-end;
+      gap: 10px;
+      margin: 14px 0 12px;
+      flex-wrap:wrap;
+    }
+    .section-head h2{
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: .2px;
+    }
+    .section-head p{
+      margin:0;
+      color:var(--muted);
+      font-size: 14px;
+      max-width: 620px;
+    }
+    .pill{
+      display:flex; align-items:center; gap:10px;
+      padding: 10px 12px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      border-radius: 999px;
+      color:var(--muted);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .tabs{
+      display:flex; gap:8px; flex-wrap:wrap;
+      margin: 10px 0 14px;
+    }
+    .tab{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color:var(--muted);
+      padding: 10px 12px;
+      border-radius: 999px;
+      cursor:pointer;
+      font-weight:900;
+      font-size: 13px;
+      transition: .2s ease;
+    }
+    .tab.active{
+      background: rgba(255,138,0,.14);
+      color:#fff;
+      border-color: rgba(255,138,0,.35);
+    }
+
+    .thumb{
+      height: 130px;
+      background:
+        radial-gradient(500px 180px at 25% 0%, rgba(255,138,0,.22), transparent 55%),
+        radial-gradient(500px 180px at 85% 0%, rgba(255,45,45,.16), transparent 58%),
+        rgba(0,0,0,.35);
+      border-bottom:1px solid var(--line);
+      position:relative;
+    }
+    .thumb img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+      filter: saturate(1.05) contrast(1.05);
+      opacity: .92;
+    }
+    .thumb .badge{
+      position:absolute; left:12px; top:12px;
+      font-size: 12px;
+      font-weight:900;
+      background: rgba(0,0,0,.55);
+      border:1px solid var(--line);
+      color:#fff;
+      padding: 8px 10px;
+      border-radius: 999px;
+      backdrop-filter: blur(8px);
+    }
+    .title-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap: 10px;
+    }
+    .price{
+      font-weight: 950;
+      color: var(--orange);
+      white-space:nowrap;
+    }
+
+    .card-actions{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      justify-content: space-between;
+      margin-top:auto;
+    }
+    .qty{
+      display:flex; align-items:center; gap: 8px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.25);
+      padding: 8px;
+      border-radius: 999px;
+    }
+    .qty button{
+      width:30px; height:30px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color:#fff;
+      cursor:pointer;
+      font-weight:900;
+    }
+    .qty span{
+      width: 20px;
+      text-align:center;
+      font-weight:900;
+    }
+
+    /* Floating cart for mobile */
+    .floating-cart{
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      z-index: 70;
+      border-radius: 999px;
+      padding: 14px 16px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.55);
+      display:none;
+    }
+
+    /* Drawer */
+    .overlay{
+      position: fixed; inset:0;
+      background: rgba(0,0,0,.6);
+      backdrop-filter: blur(6px);
+      display:none;
+      z-index: 80;
+    }
+    .drawer{
+      position: fixed;
+      top:0; right:0;
+      height:100%;
+      width: 420px;
+      max-width: 92vw;
+      background: rgba(15,15,16,.92);
+      border-left: 1px solid var(--line);
+      box-shadow: -24px 0 60px rgba(0,0,0,.55);
+      transform: translateX(100%);
+      transition: .25s ease;
+      z-index: 90;
+      display:flex;
+      flex-direction: column;
+    }
+    .drawer.open{ transform: translateX(0); }
+    .overlay.show{ display:block; }
+
+    .drawer-head{
+      padding: 16px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .drawer-head h3{ margin:0; font-size: 16px; }
+    .close{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color:#fff;
+      border-radius: 999px;
+      padding: 9px 12px;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .drawer-body{
+      padding: 14px 16px;
+      overflow:auto;
+      flex: 1;
+    }
+    .cart-empty{
+      border:1px dashed rgba(255,255,255,.18);
+      background: rgba(255,255,255,.02);
+      border-radius: var(--radius);
+      padding: 16px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .cart-item{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      border-radius: var(--radius2);
+      padding: 12px;
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .cart-item b{ display:block; margin-bottom: 2px; }
+    .cart-item small{ color:var(--muted); }
+    .cart-item .right{
+      text-align:right;
+      display:flex;
+      flex-direction: column;
+      align-items:flex-end;
+      gap: 8px;
+    }
+    .mini-qty{
+      display:flex; align-items:center; gap:6px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.25);
+      border-radius: 999px;
+      padding: 6px;
+    }
+    .mini-qty button{
+      width:28px; height:28px;
+      border-radius: 999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color:#fff;
+      cursor:pointer;
+      font-weight:900;
+    }
+    .mini-qty span{ width: 18px; text-align:center; font-weight:900; }
+
+    .divider{ height:1px; background: var(--line); margin: 14px 0; }
+
+    .field{
+      display:grid;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .field label{
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 900;
+    }
+    .field input, .field select{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.25);
+      color: var(--text);
+      outline:none;
+    }
+    .row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .pay-options{ display:grid; gap: 8px; }
+    .radio{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      border-radius: 14px;
+      padding: 12px;
+      display:flex;
+      align-items:flex-start;
+      gap: 10px;
+      cursor:pointer;
+    }
+    .radio input{ margin-top: 3px; }
+    .radio b{ display:block; }
+    .radio small{ color: var(--muted); line-height: 1.4; }
+
+    .drawer-foot{
+      border-top:1px solid var(--line);
+      padding: 14px 16px;
+      display:grid;
+      gap: 10px;
+      background: rgba(12,12,13,.95);
+    }
+    .totals{
+      display:flex; align-items:center; justify-content:space-between;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .totals b{ color:#fff; font-size: 16px; }
+    .btn-wide{
+      width:100%;
+      padding: 13px 14px;
+      border-radius: 14px;
+      font-weight: 950;
+    }
+
+    /* Modal */
+    .modal{
+      position: fixed; inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 18px;
+      z-index: 120;
+    }
+    .modal.show{ display:flex; }
+    .modal-card{
+      max-width: 520px;
+      width:100%;
+      background: rgba(15,15,16,.94);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .modal-top{
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .modal-top h4{ margin:0; font-size: 16px; }
+    .modal-body{ padding: 16px; color: var(--muted); line-height: 1.6; }
+    .modal-body b{ color:#fff; }
+    .code{
+      background: rgba(0,0,0,.35);
+      border:1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      color:#fff;
+      margin: 12px 0;
+      white-space: pre-wrap;
+    }
+    .modal-actions{
+      padding: 16px;
+      border-top:1px solid var(--line);
+      display:flex;
+      gap: 10px;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
+
+    /* Footer */
+    footer{
+      border-top: 1px solid var(--line);
+      padding: 18px 0;
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    /* Responsive */
+    @media (max-width: 950px){
+      .hero-grid{ grid-template-columns: 1fr; }
+      .info-card{ min-height: unset; }
+      .grid{ grid-template-columns: repeat(2, 1fr); }
+      .search{ width: 180px; }
+    }
+    @media (max-width: 560px){
+      .grid{ grid-template-columns: 1fr; }
+      .hero h1{ font-size: 36px; }
+      .search{ display:none; }
+      .row{ grid-template-columns: 1fr; }
+      .floating-cart{ display:inline-flex; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- TOPBAR (Single-page nav) -->
+  <div class="topbar">
+    <div class="container">
+      <div class="topbar-inner">
+        <div class="brand" onclick="goTo('home')" style="cursor:pointer;">
+          <div class="brand-badge">ER</div>
+          <div>
+            Eerste River Foods
+            <small>Order ahead & collect</small>
+          </div>
+        </div>
+
+        <div class="actions">
+          <div class="search" title="Search menu">
+            <span style="opacity:.7">🔎</span>
+            <input id="searchInput" type="text" placeholder="Search menu..." />
+          </div>
+          <button class="btn btn-ghost" onclick="goTo('home')">Home</button>
+          <button class="btn btn-ghost" onclick="goTo('menu')">Menu</button>
+          <button class="btn btn-ghost" onclick="goTo('contact')">Contact</button>
+          <button class="btn btn-primary cart-btn" onclick="openCart()">
+            🛒 Cart
+            <span id="cartCount" class="cart-count" style="display:none;">0</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOME (A) -->
+  <section id="home" class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-card">
+          <div class="hero-media" aria-hidden="true"></div>
+          <div class="hero-content">
+            <div class="tag">⏱️ Skip the queue • ✅ Halaal-friendly • 📍 Eerste River Mall</div>
+            <h1>Order online, <span>collect fast</span>.</h1>
+            <p>
+              Choose your meal, pick a collection time, and pay online or at pickup.
+              Perfect for shoppers who don’t want to stand in long lines.
+            </p>
+            <div class="hero-cta">
+              <button class="btn btn-primary" onclick="goTo('menu')">Start an order</button>
+              <button class="btn btn-ghost" onclick="openCart()">View cart</button>
+              <button class="btn btn-ghost" onclick="openWhatsAppDemo(event)">WhatsApp</button>
+            </div>
+            <div class="mini">
+              Demo note: this is a prototype. Real payments can be added later with PayFast / Peach / Yoco.
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div>
+            <h3>Quick Info</h3>
+            <div class="info-list">
+              <div class="info-item"><b>Pickup only</b><br/>No delivery (keeps it fast).</div>
+              <div class="info-item"><b>Best sellers</b><br/>Fish & Chips, Burgers, Russian & Pap.</div>
+              <div class="info-item"><b>Busy hours</b><br/>12:00–14:00 & 17:00–19:00.</div>
+            </div>
+          </div>
+          <div class="notice">
+            <b style="color:#fff">Owner pitch line:</b><br/>
+            “Customers order while shopping, then collect quickly — fewer queues, more sales.”
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT (G) -->
+  <section id="about" class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>About Eerste River Foods</h2>
+          <p>
+            A clean, halaal-friendly takeaway experience built for speed.
+            This “Order & Collect” system is designed to reduce queues and make pickup smoother for customers.
+          </p>
+        </div>
+        <div class="pill">✅ Halaal-friendly • ⚡ Fast service • 📲 Phone orders</div>
+      </div>
+
+      <div class="grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="card slim">
+          <div class="card-body">
+            <p class="title">✅ Halaal-friendly</p>
+            <p class="desc">Clear messaging for customers who need halaal-friendly food options.</p>
+          </div>
+        </div>
+        <div class="card slim">
+          <div class="card-body">
+            <p class="title">⏱️ Built for busy hours</p>
+            <p class="desc">Order ahead while shopping, then collect when it’s ready.</p>
+          </div>
+        </div>
+        <div class="card slim">
+          <div class="card-body">
+            <p class="title">📍 Mall pickup</p>
+            <p class="desc">Focused on a simple pickup flow to keep operations smooth.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENU + ORDER SYSTEM (C) -->
+  <section id="menu" class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Menu</h2>
+          <p>Pick items, then choose pickup time & payment in your cart. (Order goes to WhatsApp in this demo.)</p>
+        </div>
+        <div class="pill">⭐ Fast checkout • 🔥 Fresh • 💳 Card/Cash</div>
+      </div>
+
+      <div class="tabs" id="tabs"></div>
+      <div class="grid" id="menuGrid"></div>
+    </div>
+  </section>
+
+  <!-- CONTACT / LOCATION (F) -->
+  <section id="contact" class="section" style="padding-top:0;">
+    <div class="container">
+      <div class="hero-card" style="min-height:unset;">
+        <div style="padding:18px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+          <div>
+            <b style="font-size:16px;">Contact & Location</b>
+            <div style="color:var(--muted); font-size:13px; margin-top:4px;">Eerste River Mall • Pickup counter</div>
+          </div>
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <a class="btn btn-primary" href="#" onclick="openWhatsAppDemo(event)">WhatsApp Enquiries</a>
+            <a class="btn btn-ghost" target="_blank"
+               href="https://www.google.com/maps/search/?api=1&query=Eerste+River+Mall">
+              Open in Google Maps
+            </a>
+          </div>
+        </div>
+        <div style="padding:18px; color:var(--muted); line-height:1.6;">
+          Order on your phone while shopping, then collect fast at the pickup counter.
+          Perfect for busy hours when the queue is long.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      © 2026 Eerste River Foods • Prototype “Order & Collect” system
+    </div>
+  </footer>
+
+  <!-- Floating cart for mobile -->
+  <button class="btn btn-primary floating-cart" onclick="openCart()">
+    🛒 Cart <span id="cartCount2" style="margin-left:8px; font-weight:950;"></span>
+  </button>
+
+  <!-- OVERLAY + CART DRAWER -->
+  <div id="overlay" class="overlay" onclick="closeCart()"></div>
+
+  <aside id="drawer" class="drawer" aria-label="Cart drawer">
+    <div class="drawer-head">
+      <h3>Your Cart</h3>
+      <button class="close" onclick="closeCart()">✕</button>
+    </div>
+
+    <div class="drawer-body">
+      <div id="cartItems"></div>
+
+      <div class="divider"></div>
+
+      <div class="row">
+        <div class="field">
+          <label for="pickupMode">Pickup time</label>
+          <select id="pickupMode" onchange="togglePickupTime()">
+            <option value="asap">ASAP (15–25 mins)</option>
+            <option value="schedule">Schedule a time</option>
+          </select>
+        </div>
+
+        <div class="field" id="pickupTimeField" style="display:none;">
+          <label for="pickupTime">Choose time</label>
+          <input id="pickupTime" type="time" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="customerName">Name (for collection)</label>
+        <input id="customerName" type="text" placeholder="e.g., Wayne" />
+      </div>
+
+      <div class="field">
+        <label>Payment option</label>
+        <div class="pay-options">
+          <label class="radio">
+            <input type="radio" name="pay" value="online" checked />
+            <div>
+              <b>Pay online (Card)</b>
+              <small>Demo mode: real client can use PayFast / Peach / Yoco.</small>
+            </div>
+          </label>
+
+          <label class="radio">
+            <input type="radio" name="pay" value="pickup" />
+            <div>
+              <b>Pay at pickup (Cash or Card)</b>
+              <small>Fastest to launch — customers pay at collection.</small>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="notes">Notes (optional)</label>
+        <input id="notes" type="text" placeholder="e.g., Extra peri-peri, no salad..." />
+      </div>
+    </div>
+
+    <div class="drawer-foot">
+      <div class="totals">
+        <span>Subtotal</span>
+        <b id="subtotal">R0</b>
+      </div>
+      <button class="btn btn-primary btn-wide" onclick="placeOrder()">Place order</button>
+      <button class="btn btn-ghost btn-wide" onclick="clearCart()">Clear cart</button>
+    </div>
+  </aside>
+
+  <!-- CONFIRMATION MODAL -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-top">
+        <h4>Order Confirmation</h4>
+        <button class="close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeModal()">Close</button>
+        <button class="btn btn-primary" onclick="openWhatsAppOrder()">Send order via WhatsApp</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================
+    // Demo settings
+    // =========================
+    const WHATSAPP_PHONE = "27671936481"; // 0671936481 in international format (no leading 0)
+
+    // =========================
+    // Menu Data (swap items as needed)
+    // =========================
+    const MENU = [
+      { id:"fish1", cat:"Fish & Chips", name:"Hake & Chips", price:65, desc:"Golden hake, fresh chips, tartar sauce.", badge:"Popular", img:"menu-fish.jpg" },
+      { id:"fish2", cat:"Fish & Chips", name:"Calamari & Chips", price:85, desc:"Crispy calamari rings + chips.", badge:"New", img:"menu-calamari.jpg" },
+      { id:"burger1", cat:"Burgers", name:"Beef Burger + Chips", price:70, desc:"Juicy beef patty, cheese, sauce, chips.", badge:"Best", img:"menu-burger.jpg" },
+      { id:"burger2", cat:"Burgers", name:"Chicken Burger + Chips", price:68, desc:"Crispy chicken, lettuce, mayo, chips.", badge:"-", img:"menu-chicken.jpg" },
+      { id:"combo1", cat:"Combos", name:"Russian + Pap", price:45, desc:"Russian sausage with pap & chakalaka.", badge:"Value", img:"menu-russian.jpg" },
+      { id:"combo2", cat:"Combos", name:"Family Combo", price:180, desc:"Mix for 3–4 people (demo item).", badge:"Deal", img:"menu-family.jpg" },
+      { id:"sides1", cat:"Sides", name:"Extra Chips", price:25, desc:"Fresh chips portion.", badge:"-", img:"menu-chips.jpg" },
+      { id:"sides2", cat:"Sides", name:"Sauce (Peri/Chilli)", price:8, desc:"Add your favourite sauce.", badge:"Add-on", img:"menu-sauce.jpg" },
+      { id:"drinks1", cat:"Drinks", name:"Soft Drink 330ml", price:15, desc:"Coke/Fanta/Sprite (demo).", badge:"-", img:"menu-drink.jpg" }
+    ];
+
+    const state = {
+      category: "All",
+      query: "",
+      cart: {}, // {id: qty}
+      lastOrderText: ""
+    };
+
+    // Helpers
+    const fmt = (n) => `R${n}`;
+    const el = (id) => document.getElementById(id);
+
+    function uniqCats(){
+      const cats = Array.from(new Set(MENU.map(x => x.cat)));
+      return ["All", ...cats];
+    }
+
+    function filteredMenu(){
+      const q = state.query.trim().toLowerCase();
+      return MENU.filter(item => {
+        const catOk = state.category === "All" || item.cat === state.category;
+        const qOk = !q || (item.name.toLowerCase().includes(q) || item.desc.toLowerCase().includes(q) || item.cat.toLowerCase().includes(q));
+        return catOk && qOk;
+      });
+    }
+
+    function cartCount(){
+      return Object.values(state.cart).reduce((a,b)=>a+b,0);
+    }
+
+    function cartSubtotal(){
+      let total = 0;
+      for (const [id, qty] of Object.entries(state.cart)){
+        const item = MENU.find(x => x.id === id);
+        if (item) total += item.price * qty;
+      }
+      return total;
+    }
+
+    function setCartCountUI(){
+      const c = cartCount();
+
+      const badge = el("cartCount");
+      if (c > 0){
+        badge.style.display = "grid";
+        badge.textContent = c;
+      } else {
+        badge.style.display = "none";
+      }
+
+      const c2 = document.getElementById("cartCount2");
+      if (c2) c2.textContent = c > 0 ? `(${c})` : "";
+
+      el("subtotal").textContent = fmt(cartSubtotal());
+    }
+
+    // Single-page nav helper
+    function goTo(sectionId){
+      const target = document.getElementById(sectionId);
+      if (!target) return;
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    // Tabs
+    function renderTabs(){
+      const tabs = el("tabs");
+      tabs.innerHTML = "";
+      uniqCats().forEach(cat => {
+        const b = document.createElement("button");
+        b.className = "tab" + (cat === state.category ? " active" : "");
+        b.textContent = cat;
+        b.onclick = () => { state.category = cat; renderTabs(); renderMenu(); };
+        tabs.appendChild(b);
+      });
+    }
+
+    // Menu
+    function renderMenu(){
+      const grid = el("menuGrid");
+      grid.innerHTML = "";
+
+      const items = filteredMenu();
+      if (!items.length){
+        grid.innerHTML = `<div class="cart-empty" style="grid-column:1/-1;">No items found. Try another search.</div>`;
+        return;
+      }
+
+      items.forEach(item => {
+        const qty = state.cart[item.id] || 0;
+
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML = `
+          <div class="thumb">
+            ${item.img ? `<img src="${item.img}" alt="${item.name}">` : ``}
+            <div class="badge">${item.badge || "Menu"}</div>
+          </div>
+          <div class="card-body">
+            <div class="title-row">
+              <div>
+                <p class="title">${item.name}</p>
+                <p class="desc">${item.desc}</p>
+              </div>
+              <div class="price">${fmt(item.price)}</div>
+            </div>
+
+            <div class="card-actions">
+              <div class="qty" aria-label="Quantity controls">
+                <button onclick="dec('${item.id}')">−</button>
+                <span id="qty-${item.id}">${qty}</span>
+                <button onclick="inc('${item.id}')">+</button>
+              </div>
+              <button class="btn btn-primary" onclick="quickAdd('${item.id}')">Add</button>
+            </div>
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+
+      setCartCountUI();
+    }
+
+    function inc(id){
+      state.cart[id] = (state.cart[id] || 0) + 1;
+      updateQtyUI(id);
+    }
+    function dec(id){
+      const q = state.cart[id] || 0;
+      if (q <= 0) return;
+      state.cart[id] = q - 1;
+      if (state.cart[id] <= 0) delete state.cart[id];
+      updateQtyUI(id);
+    }
+    function quickAdd(id){
+      inc(id);
+      openCart();
+    }
+
+    function updateQtyUI(id){
+      const qEl = document.getElementById(`qty-${id}`);
+      if (qEl) qEl.textContent = state.cart[id] || 0;
+      setCartCountUI();
+      renderCart();
+    }
+
+    // Cart drawer
+    function openCart(){
+      el("overlay").classList.add("show");
+      el("drawer").classList.add("open");
+      renderCart();
+    }
+    function closeCart(){
+      el("overlay").classList.remove("show");
+      el("drawer").classList.remove("open");
+    }
+
+    function renderCart(){
+      const wrap = el("cartItems");
+      const entries = Object.entries(state.cart);
+
+      if (!entries.length){
+        wrap.innerHTML = `
+          <div class="cart-empty">
+            Your cart is empty.<br/>
+            Add items from the menu to start an order.
+          </div>
+        `;
+        setCartCountUI();
+        return;
+      }
+
+      wrap.innerHTML = "";
+      entries.forEach(([id, qty]) => {
+        const item = MENU.find(x => x.id === id);
+        if (!item) return;
+
+        const row = document.createElement("div");
+        row.className = "cart-item";
+        row.innerHTML = `
+          <div>
+            <b>${item.name}</b>
+            <small>${fmt(item.price)} each • ${item.cat}</small>
+          </div>
+          <div class="right">
+            <div><b>${fmt(item.price * qty)}</b></div>
+            <div class="mini-qty">
+              <button onclick="dec('${id}')">−</button>
+              <span>${qty}</span>
+              <button onclick="inc('${id}')">+</button>
+            </div>
+          </div>
+        `;
+        wrap.appendChild(row);
+      });
+
+      setCartCountUI();
+    }
+
+    function clearCart(){
+      state.cart = {};
+      renderMenu();
+      renderCart();
+      setCartCountUI();
+    }
+
+    // Pickup time
+    function togglePickupTime(){
+      const mode = el("pickupMode").value;
+      el("pickupTimeField").style.display = (mode === "schedule") ? "block" : "none";
+    }
+
+    // Order
+    function placeOrder(){
+      const count = cartCount();
+      if (count === 0){
+        alert("Your cart is empty. Add items first.");
+        return;
+      }
+
+      const name = el("customerName").value.trim() || "Customer";
+      const mode = el("pickupMode").value;
+      const pickup = mode === "asap" ? "ASAP (15–25 mins)" : (el("pickupTime").value ? el("pickupTime").value : "Scheduled time");
+      const notes = el("notes").value.trim();
+      const pay = document.querySelector('input[name="pay"]:checked')?.value || "online";
+      const subtotal = cartSubtotal();
+
+      const lines = [];
+      for (const [id, qty] of Object.entries(state.cart)){
+        const item = MENU.find(x => x.id === id);
+        if (!item) continue;
+        lines.push(`${qty}x ${item.name} (${fmt(item.price)}) = ${fmt(item.price * qty)}`);
+      }
+
+      const orderNo = "ERF-" + Math.floor(100000 + Math.random() * 900000);
+      const payText = (pay === "online")
+        ? "PAYMENT: Online Card (Demo)"
+        : "PAYMENT: Pay at Pickup (Cash/Card)";
+
+      state.lastOrderText =
+`Eerste River Foods Order
+Order No: ${orderNo}
+Name: ${name}
+Pickup: ${pickup}
+${payText}
+Items:
+${lines.join("\n")}
+Subtotal: ${fmt(subtotal)}
+Notes: ${notes || "None"}
+Location: Eerste River Mall (Pickup Counter)
+`;
+
+      const modalBody = `
+        <p><b>Thank you, ${escapeHtml(name)}!</b> Your order has been placed (demo).</p>
+        <div class="code">${escapeHtml(state.lastOrderText)}</div>
+        <p>
+          <b>Pickup instructions:</b><br/>
+          1) Come to the pickup counter with your order number.<br/>
+          2) If you selected pay-at-pickup, payment happens at collection.<br/>
+          3) For online payments, a real system can send a PayFast/Yoco link.
+        </p>
+      `;
+
+      el("modalBody").innerHTML = modalBody;
+      closeCart();
+      openModal();
+    }
+
+    function openModal(){
+      el("modal").classList.add("show");
+      el("overlay").classList.add("show");
+    }
+    function closeModal(){
+      el("modal").classList.remove("show");
+      el("overlay").classList.remove("show");
+    }
+
+    // WhatsApp
+    function openWhatsAppDemo(e){
+      if (e) e.preventDefault();
+      const msg = `Hi Eerste River Foods 👋\nI have a question about the menu / my order.\nLocation: Eerste River Mall.`;
+      window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(msg)}`, "_blank");
+    }
+
+    function openWhatsAppOrder(){
+      if (!state.lastOrderText) {
+        alert("No order found yet. Place an order first.");
+        return;
+      }
+      window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(state.lastOrderText)}`, "_blank");
+    }
+
+    function escapeHtml(str){
+      return str.replace(/[&<>"']/g, (m) => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[m]));
+    }
+
+    // Init
+    document.addEventListener("DOMContentLoaded", () => {
+      renderTabs();
+      renderMenu();
+      togglePickupTime();
+
+      const input = el("searchInput");
+      input.addEventListener("input", (e) => {
+        state.query = e.target.value;
+        renderMenu();
+      });
+
+      setCartCountUI();
+    });
+  </script>
+</body>
+</html>
