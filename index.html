@@ -184,7 +184,7 @@
       position:absolute; inset:0;
       background:
         linear-gradient(90deg, rgba(7,7,7,.86) 0%, rgba(7,7,7,.35) 55%, rgba(7,7,7,.92) 100%),
-        url('food-hero.jpg') center/cover no-repeat;
+        url('images/food-hero.jpg') center/cover no-repeat;
       filter: saturate(1.05) contrast(1.05);
     }
     .hero-content{
@@ -311,7 +311,7 @@
     }
 
     .thumb{
-      height: 130px;
+      height: 140px;
       background:
         radial-gradient(500px 180px at 25% 0%, rgba(255,138,0,.22), transparent 55%),
         radial-gradient(500px 180px at 85% 0%, rgba(255,45,45,.16), transparent 58%),
@@ -377,6 +377,55 @@
       width: 20px;
       text-align:center;
       font-weight:900;
+    }
+
+    /* About grid FIX (mobile-friendly) */
+    .about-grid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    /* Gallery strip (optional but looks premium) */
+    .gallery{
+      display:grid;
+      grid-template-columns: 1.3fr .7fr;
+      gap: 14px;
+      margin-top: 12px;
+    }
+    .gallery .g1, .gallery .g2{
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      overflow:hidden;
+      background: rgba(255,255,255,.02);
+      box-shadow: 0 14px 40px rgba(0,0,0,.35);
+      min-height: 200px;
+      position: relative;
+    }
+    .gallery .g1{
+      background:
+        linear-gradient(90deg, rgba(7,7,7,.55), rgba(7,7,7,.85)),
+        url("images/gallery-1.jpg") center/cover no-repeat;
+    }
+    .gallery .g2{
+      background:
+        linear-gradient(90deg, rgba(7,7,7,.55), rgba(7,7,7,.85)),
+        url("images/gallery-2.jpg") center/cover no-repeat;
+    }
+    .gallery .caption{
+      position:absolute;
+      left:14px;
+      bottom:14px;
+      right:14px;
+      color:#fff;
+      font-weight:900;
+      background: rgba(0,0,0,.35);
+      border:1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 12px;
+      backdrop-filter: blur(8px);
+      font-size: 13px;
+      line-height: 1.4;
     }
 
     /* Floating cart for mobile */
@@ -613,13 +662,19 @@
       .info-card{ min-height: unset; }
       .grid{ grid-template-columns: repeat(2, 1fr); }
       .search{ width: 180px; }
+
+      .about-grid{ grid-template-columns: repeat(2, 1fr); }
+      .gallery{ grid-template-columns: 1fr; }
+      .gallery .g1, .gallery .g2{ min-height: 220px; }
     }
+
     @media (max-width: 560px){
       .grid{ grid-template-columns: 1fr; }
       .hero h1{ font-size: 36px; }
       .search{ display:none; }
       .row{ grid-template-columns: 1fr; }
       .floating-cart{ display:inline-flex; }
+      .about-grid{ grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -643,6 +698,7 @@
             <input id="searchInput" type="text" placeholder="Search menu..." />
           </div>
           <button class="btn btn-ghost" onclick="goTo('home')">Home</button>
+          <button class="btn btn-ghost" onclick="goTo('about')">About</button>
           <button class="btn btn-ghost" onclick="goTo('menu')">Menu</button>
           <button class="btn btn-ghost" onclick="goTo('contact')">Contact</button>
           <button class="btn btn-primary cart-btn" onclick="openCart()">
@@ -654,7 +710,7 @@
     </div>
   </div>
 
-  <!-- HOME (A) -->
+  <!-- HOME -->
   <section id="home" class="hero">
     <div class="container">
       <div class="hero-grid">
@@ -696,7 +752,7 @@
     </div>
   </section>
 
-  <!-- ABOUT (G) -->
+  <!-- ABOUT -->
   <section id="about" class="section">
     <div class="container">
       <div class="section-head">
@@ -710,7 +766,7 @@
         <div class="pill">✅ Halaal-friendly • ⚡ Fast service • 📲 Phone orders</div>
       </div>
 
-      <div class="grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="about-grid">
         <div class="card slim">
           <div class="card-body">
             <p class="title">✅ Halaal-friendly</p>
@@ -730,10 +786,24 @@
           </div>
         </div>
       </div>
+
+      <!-- Optional: Gallery strip -->
+      <div class="gallery">
+        <div class="g1">
+          <div class="caption"> Fish & Chips / Best sellers </div>
+        </div>
+        <div class="g2">
+          <div class="caption">Burgers / Combos </div>
+        </div>
+      </div>
+
+      <div class="mini" style="margin-top:12px;">
+        <b style="color:#fff;">Images tip:</b> Create an <b>images</b> folder and add <b>food-hero.jpg</b>, <b>gallery-1.jpg</b>, <b>gallery-2.jpg</b>.
+      </div>
     </div>
   </section>
 
-  <!-- MENU + ORDER SYSTEM (C) -->
+  <!-- MENU -->
   <section id="menu" class="section">
     <div class="container">
       <div class="section-head">
@@ -749,7 +819,7 @@
     </div>
   </section>
 
-  <!-- CONTACT / LOCATION (F) -->
+  <!-- CONTACT -->
   <section id="contact" class="section" style="padding-top:0;">
     <div class="container">
       <div class="hero-card" style="min-height:unset;">
@@ -873,34 +943,28 @@
   </div>
 
   <script>
-    // =========================
-    // Demo settings
-    // =========================
-    const WHATSAPP_PHONE = "27671936481"; // 0671936481 in international format (no leading 0)
+    const WHATSAPP_PHONE = "27671936481"; // 0671936481 in international format
 
-    // =========================
-    // Menu Data (swap items as needed)
-    // =========================
+    // MENU DATA (image-folder-ready)
     const MENU = [
-      { id:"fish1", cat:"Fish & Chips", name:"Hake & Chips", price:65, desc:"Golden hake, fresh chips, tartar sauce.", badge:"Popular", img:"menu-fish.jpg" },
-      { id:"fish2", cat:"Fish & Chips", name:"Calamari & Chips", price:85, desc:"Crispy calamari rings + chips.", badge:"New", img:"menu-calamari.jpg" },
-      { id:"burger1", cat:"Burgers", name:"Beef Burger + Chips", price:70, desc:"Juicy beef patty, cheese, sauce, chips.", badge:"Best", img:"menu-burger.jpg" },
-      { id:"burger2", cat:"Burgers", name:"Chicken Burger + Chips", price:68, desc:"Crispy chicken, lettuce, mayo, chips.", badge:"-", img:"menu-chicken.jpg" },
-      { id:"combo1", cat:"Combos", name:"Russian + Pap", price:45, desc:"Russian sausage with pap & chakalaka.", badge:"Value", img:"menu-russian.jpg" },
-      { id:"combo2", cat:"Combos", name:"Family Combo", price:180, desc:"Mix for 3–4 people (demo item).", badge:"Deal", img:"menu-family.jpg" },
-      { id:"sides1", cat:"Sides", name:"Extra Chips", price:25, desc:"Fresh chips portion.", badge:"-", img:"menu-chips.jpg" },
-      { id:"sides2", cat:"Sides", name:"Sauce (Peri/Chilli)", price:8, desc:"Add your favourite sauce.", badge:"Add-on", img:"menu-sauce.jpg" },
-      { id:"drinks1", cat:"Drinks", name:"Soft Drink 330ml", price:15, desc:"Coke/Fanta/Sprite (demo).", badge:"-", img:"menu-drink.jpg" }
+      { id:"fish1", cat:"Fish & Chips", name:"Hake & Chips", price:65, desc:"Golden hake, fresh chips, tartar sauce.", badge:"Popular", img:"images/menu-fish.jpg" },
+      { id:"fish2", cat:"Fish & Chips", name:"Calamari & Chips", price:85, desc:"Crispy calamari rings + chips.", badge:"New", img:"images/menu-calamari.jpg" },
+      { id:"burger1", cat:"Burgers", name:"Beef Burger + Chips", price:70, desc:"Juicy beef patty, cheese, sauce, chips.", badge:"Best", img:"images/menu-burger.jpg" },
+      { id:"burger2", cat:"Burgers", name:"Chicken Burger + Chips", price:68, desc:"Crispy chicken, lettuce, mayo, chips.", badge:"-", img:"images/menu-chicken.jpg" },
+      { id:"combo1", cat:"Combos", name:"Russian + Pap", price:45, desc:"Russian sausage with pap & chakalaka.", badge:"Value", img:"images/menu-russian.jpg" },
+      { id:"combo2", cat:"Combos", name:"Family Combo", price:180, desc:"Mix for 3–4 people (demo item).", badge:"Deal", img:"images/menu-family.jpg" },
+      { id:"sides1", cat:"Sides", name:"Extra Chips", price:25, desc:"Fresh chips portion.", badge:"-", img:"images/menu-chips.jpg" },
+      { id:"sides2", cat:"Sides", name:"Sauce (Peri/Chilli)", price:8, desc:"Add your favourite sauce.", badge:"Add-on", img:"images/menu-sauce.jpg" },
+      { id:"drinks1", cat:"Drinks", name:"Soft Drink 330ml", price:15, desc:"Coke/Fanta/Sprite (demo).", badge:"-", img:"images/menu-drink.jpg" }
     ];
 
     const state = {
       category: "All",
       query: "",
-      cart: {}, // {id: qty}
+      cart: {},
       lastOrderText: ""
     };
 
-    // Helpers
     const fmt = (n) => `R${n}`;
     const el = (id) => document.getElementById(id);
 
@@ -948,14 +1012,12 @@
       el("subtotal").textContent = fmt(cartSubtotal());
     }
 
-    // Single-page nav helper
     function goTo(sectionId){
       const target = document.getElementById(sectionId);
       if (!target) return;
       target.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
-    // Tabs
     function renderTabs(){
       const tabs = el("tabs");
       tabs.innerHTML = "";
@@ -968,7 +1030,6 @@
       });
     }
 
-    // Menu
     function renderMenu(){
       const grid = el("menuGrid");
       grid.innerHTML = "";
@@ -985,9 +1046,15 @@
         const card = document.createElement("div");
         card.className = "card";
 
+        // Image fallback keeps design clean if image missing
+        const imgHtml = item.img
+          ? `<img src="${item.img}" alt="${item.name}"
+                 onerror="this.style.display='none'; this.parentElement.style.background='rgba(0,0,0,.35)';">`
+          : ``;
+
         card.innerHTML = `
           <div class="thumb">
-            ${item.img ? `<img src="${item.img}" alt="${item.name}">` : ``}
+            ${imgHtml}
             <div class="badge">${item.badge || "Menu"}</div>
           </div>
           <div class="card-body">
@@ -1039,7 +1106,6 @@
       renderCart();
     }
 
-    // Cart drawer
     function openCart(){
       el("overlay").classList.add("show");
       el("drawer").classList.add("open");
@@ -1099,13 +1165,11 @@
       setCartCountUI();
     }
 
-    // Pickup time
     function togglePickupTime(){
       const mode = el("pickupMode").value;
       el("pickupTimeField").style.display = (mode === "schedule") ? "block" : "none";
     }
 
-    // Order
     function placeOrder(){
       const count = cartCount();
       if (count === 0){
@@ -1170,7 +1234,6 @@ Location: Eerste River Mall (Pickup Counter)
       el("overlay").classList.remove("show");
     }
 
-    // WhatsApp
     function openWhatsAppDemo(e){
       if (e) e.preventDefault();
       const msg = `Hi Eerste River Foods 👋\nI have a question about the menu / my order.\nLocation: Eerste River Mall.`;
@@ -1191,7 +1254,6 @@ Location: Eerste River Mall (Pickup Counter)
       }[m]));
     }
 
-    // Init
     document.addEventListener("DOMContentLoaded", () => {
       renderTabs();
       renderMenu();
